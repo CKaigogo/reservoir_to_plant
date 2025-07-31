@@ -96,8 +96,8 @@ python train_water.py --num_reservoirs 12 --num_plants 3 --episode_length 96
 ##=====================================================================================================================
 
 - `fixed_connections` = np.array([
--    [True, False, False],            # reservoir_0 -> plant_0
--    [False, False, True],            # reservoir_1 -> plant_2
+-    [True, False, False],   # reservoir_0 -> plant_0
+-    [False, False, True],   # reservoir_1 -> plant_2
 -    [False, False, True],   # reservoir_2 -> plant_2
 -    [False, True, False],   # reservoir_3 -> plant_1
 -    [False, True, False],   # reservoir_4 -> plant_1
