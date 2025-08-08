@@ -97,7 +97,6 @@ python train_water.py --num_reservoirs 15 --num_plants 6 --episode_length 96
 
 
 - `fixed_connections` = np.array([
-<<<<<<< HEAD
 - [True, False, False, False, False, False],   # reservoir_0 -> plant_0
 - [False, False, True, False, False, False],   # reservoir_1 -> plant_2
 - [False, False, True, False, False, False],   # reservoir_2 -> plant_2
@@ -114,21 +113,6 @@ python train_water.py --num_reservoirs 15 --num_plants 6 --episode_length 96
 - [True, False, False, False, False, False],   # reservoir_13 -> plant_0
 - [False, True, False, False, False, False],   # reservoir_14 -> plant_1
 - ])
-=======
--    [True, False, False],   # reservoir_0 -> plant_0
--    [False, False, True],   # reservoir_1 -> plant_2
--    [False, False, True],   # reservoir_2 -> plant_2
--    [False, True, False],   # reservoir_3 -> plant_1
--    [False, True, False],   # reservoir_4 -> plant_1
--    [False, True, False],   # reservoir_5 -> plant_1
--    [True, False, False],   # reservoir_6 -> plant_0
--    [True, False, False],   # reservoir_7 -> plant_0
--    [True, False, False],   # reservoir_8 -> plant_0
--    [True, False, False],   # reservoir_9 -> plant_0
--    [True, False, False],   # reservoir_10 -> plant_0
--    [False, True, False],   # reservoir_11 -> plant_1
-- ])                                                                                                                       
->>>>>>> 1520d0f4949f3907d5cad3733a9c6c294246db21
 ##=====================================================================================================================
 - `enable_optimizations`：是否启用训练优化，默认为True
 
