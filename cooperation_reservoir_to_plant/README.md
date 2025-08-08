@@ -33,8 +33,8 @@ from onpolicy.algorithms.r_mappo.algorithm.rMAPPOPolicy import R_MAPPOPolicy
 
 # 创建环境
 env = WaterManagementEnv(
-    num_reservoirs=12,
-    num_plants=3,
+    num_reservoirs=15,
+    num_plants=6,
     use_fixed_connections=True,
     continuous_management=False,
     max_episode_steps=96,
@@ -76,7 +76,7 @@ for step in range(100):
 
 ```bash
 # 标准训练
-python train_water.py --num_reservoirs 12 --num_plants 3 --episode_length 96
+python train_water.py --num_reservoirs 15 --num_plants 6 --episode_length 96
 
 ```
 
@@ -84,10 +84,10 @@ python train_water.py --num_reservoirs 12 --num_plants 3 --episode_length 96
 
 ### 构造函数参数
 
-`WaterManagementEnv(num_reservoirs=12, num_plants=3, max_episode_steps=96, continuous_management=False, progressive_training_manager=None, use_fixed_connections=True, enable_optimizations=True)`
+`WaterManagementEnv(num_reservoirs=15, num_plants=6, max_episode_steps=96, continuous_management=False, progressive_training_manager=None, use_fixed_connections=True, enable_optimizations=True)`
 
-- `num_reservoirs`：水库数量，默认为12
-- `num_plants`：水厂数量，默认为3
+- `num_reservoirs`：水库数量，默认为15
+- `num_plants`：水厂数量，默认为6
 - `max_episode_steps`：每个episode的最大步数，默认为96（相当于4天，每一步为一小时）
 - `progressive_training_manager`：渐进式训练管理器，默认为None
 - `use_fixed_connections`：是否使用固定的水库-水厂连接关系，默认为True
@@ -95,20 +95,24 @@ python train_water.py --num_reservoirs 12 --num_plants 3 --episode_length 96
 
 ##=====================================================================================================================
 
+
 - `fixed_connections` = np.array([
--    [True, False, False],            # reservoir_0 -> plant_0
--    [False, False, True],            # reservoir_1 -> plant_2
--    [False, False, True],   # reservoir_2 -> plant_2
--    [False, True, False],   # reservoir_3 -> plant_1
--    [False, True, False],   # reservoir_4 -> plant_1
--    [False, True, False],   # reservoir_5 -> plant_1
--    [True, False, False],   # reservoir_6 -> plant_0
--    [True, False, False],   # reservoir_7 -> plant_0
--    [True, False, False],   # reservoir_8 -> plant_0
--    [True, False, False],   # reservoir_9 -> plant_0
--    [True, False, False],   # reservoir_10 -> plant_0
--    [False, True, False],   # reservoir_11 -> plant_1
-- ])                                                                                                                       
+- [True, False, False, False, False, False],   # reservoir_0 -> plant_0
+- [False, False, True, False, False, False],   # reservoir_1 -> plant_2
+- [False, False, True, False, False, False],   # reservoir_2 -> plant_2
+- [False, True, False, False, False, False],   # reservoir_3 -> plant_1
+- [False, True, False, False, False, False],   # reservoir_4 -> plant_1
+- [False, True, False, False, False, False],   # reservoir_5 -> plant_1
+- [False, False, False, True, False, False],
+- [False, False, False, False, True, False],
+- [True, False, False, False, False, False],   # reservoir_8 -> plant_0
+- [False, False, False, False, False, True],
+- [True, False, False, False, False, False],   # reservoir_10 -> plant_0
+- [True, False, False, False, False, False],   # reservoir_11 -> plant_0
+- [True, False, False, False, False, False],   # reservoir_12 -> plant_0
+- [True, False, False, False, False, False],   # reservoir_13 -> plant_0
+- [False, True, False, False, False, False],   # reservoir_14 -> plant_1
+- ])
 ##=====================================================================================================================
 - `enable_optimizations`：是否启用训练优化，默认为True
 
@@ -156,8 +160,8 @@ python train_water.py --num_reservoirs 12 --num_plants 3 --episode_length 96
 ```python
 {
     'demand_adjustment': [0.5-1.5],  # 需水量调整系数
-    'priority_level': 0, 1, or 2,  # 优先级别
-    'storage_strategy': [0.0-1.0]  # 存储策略
+    'priority_level': 0, 1, or 2     # 优先级别
+    'storage_strategy': [0.0-1.0]    # 存储策略
 }
 ```
 
@@ -218,8 +222,8 @@ python train_water.py --num_reservoirs 12 --num_plants 3 --episode_length 96
 
 ```python
 WaterManagementEnv(
-    num_reservoirs=12,           # 水库数量
-    num_plants=3,                # 水厂数量
+    num_reservoirs=15,           # 水库数量
+    num_plants=6,                # 水厂数量
     max_episode_steps=96,        # 最大步数（默认为4天，每小时一步）
     progressive_training_manager=None, # 渐进式训练管理器
     use_fixed_connections=True,  # 是否使用固定连接关系

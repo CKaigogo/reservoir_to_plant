@@ -62,7 +62,7 @@ def main():
     if run is None:
         print(" W&B初始化失败，使用默认配置继续训练")
         # 创建默认配置
-        parser = get_improved_config()
+        parser = get_config()
         all_args = parser.parse_args([])
         all_args.exp_name = "fallback_training"
         all_args.use_wandb = False
@@ -70,7 +70,7 @@ def main():
     else:
         # 获取基础配置
         print("--- Loading base config from get_improved_config() ---")
-        parser = get_improved_config()
+        parser = get_config()
         all_args = parser.parse_args([])
 
         # 用W&B参数覆盖

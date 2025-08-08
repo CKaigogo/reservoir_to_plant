@@ -25,15 +25,15 @@ def get_config():
 
     # === Environment Configuration ===
     parser.add_argument('--env_name', type=str, default='water', help='Environment name')
-    parser.add_argument('--num_reservoirs', type=int, default=12, help='Number of reservoirs')
-    parser.add_argument('--num_plants', type=int, default=3, help='Number of plants')
+    parser.add_argument('--num_reservoirs', type=int, default=15, help='Number of reservoirs')
+    parser.add_argument('--num_plants', type=int, default=6, help='Number of plants')
     parser.add_argument("--use_fixed_connections", type=bool, default=True)
     parser.add_argument('--continuous_management', action='store_true', default=True,
                         help='Enable continuous management mode')
 
     # === Episode Configuration ===
     parser.add_argument('--episode_length', type=int, default=96,
-                        help='Episode length (hours) - 7 days complete business cycle')
+                        help='Episode length (hours) ')
     parser.add_argument('--max_episode_steps', type=int, default=96, help='Maximum steps')
     parser.add_argument('--use_proper_time_limits', action='store_true', default=True,
                         help='Use proper time limits')
@@ -117,7 +117,7 @@ def get_config():
     # === Evaluation Configuration ===
     parser.add_argument('--use_eval', action='store_true', default=True,
                         help='Enable evaluation')
-    parser.add_argument('--max_episodes', type=int, default=10000,
+    parser.add_argument('--max_episodes', type=int, default=15000,
                         help='Maximum training episodes')
     parser.add_argument('--eval_interval', type=int, default=500,
                         help='Evaluation interval - evaluate every 25 episodes')
@@ -337,8 +337,8 @@ def get_optimized_hyperparameters():
 
         # === Environment-specific ===
         "continuous_management": True,
-        "num_reservoirs": 12,
-        "num_plants": 3,
+        "num_reservoirs": 15,
+        "num_plants": 6,
 
         # === Performance Monitoring Metric Thresholds ===
         "target_water_satisfaction": 0.95,

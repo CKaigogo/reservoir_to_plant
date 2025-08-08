@@ -271,36 +271,55 @@ def init_hierarchical_policy(env, args):
 
 
 def convert_actions_from_mappo(env, mappo_actions):
+    """将MAPPO输出的动作转换为环境可接受的格式"""
+    actions = {}
+    num_plants = env.num_plants
 
-    if hasattr(env, 'use_simplified_actions') and env.use_simplified_actions:
-        simplified_actions = env.simplified_action_processor.convert_mappo_actions_to_simplified(
-            mappo_actions, env.agents
-        )
-        original_actions = env.simplified_action_processor.convert_simplified_to_original_actions(
-            simplified_actions
-        )
-        return original_actions
-    else:
-        actions = {}
-        num_plants = getattr(env, 'num_plants', 1)  # 获取实际水厂数量
+    for i, agent_id in enumerate(env.agents):
+        agent_action = mappo_actions[i]
 
-        for i, agent_id in enumerate(env.agents):
-            agent_action = mappo_actions[i]
+        if agent_id.startswith('reservoir_'):
+            # 提取水库ID
+            res_id = int(agent_id.split('_')[1])
 
-            if agent_id.startswith('reservoir_'):
-                actions[agent_id] = {
-                    'total_release_ratio': np.array([np.clip(agent_action[0], 0.0, 1.0)]),
-                    'allocation_weights': np.clip(agent_action[1:1 + num_plants], 0.0, 1.0),
-                    'emergency_release': int(np.round(np.clip(agent_action[1 + num_plants], 0, 1)))
-                }
-            else:
-                actions[agent_id] = {
-                    'demand_adjustment': np.array([np.clip(agent_action[0] * 1.0 + 1.0, 0.5, 1.5)]),
-                    'priority_level': int(np.round(np.clip(agent_action[1] * 2, 0, 2))),
-                    'storage_strategy': np.array([np.clip(agent_action[2], 0.0, 1.0)])
-                }
+            # 动态计算分配权重的索引范围
+            # 确保我们不会超出动作数组的范围
+            allocation_weights = []
+            connected_plants = []
 
-        return actions
+            # 找出哪些水厂与该水库相连
+            for p_idx in range(num_plants):
+                if env.connections[res_id, p_idx]:
+                    connected_plants.append(p_idx)
+
+            # 如果有连接的水厂，计算权重
+            if connected_plants:
+                # 从动作中提取原始权重
+                raw_weights = agent_action[1:1 + len(connected_plants)]
+                # 归一化权重
+                if np.sum(raw_weights) > 0:
+                    allocation_weights = raw_weights / np.sum(raw_weights)
+                else:
+                    allocation_weights = np.ones(len(connected_plants)) / len(connected_plants)
+
+            # 安全地获取紧急放水标志 - 使用最后一个元素而不是固定偏移
+            emergency_index = min(len(agent_action) - 1, 1 + num_plants)
+            emergency_release = int(np.round(np.clip(agent_action[emergency_index], 0, 1)))
+
+            actions[agent_id] = {
+                'total_release_ratio': [float(np.clip(agent_action[0], 0, 1))],
+                'allocation_weights': allocation_weights.tolist(),
+                'emergency_release': emergency_release
+            }
+
+        elif agent_id.startswith('plant_'):
+            actions[agent_id] = {
+                'demand_adjustment': [float(np.clip(agent_action[0], 0.5, 1.5))],
+                'priority_level': int(np.clip(np.round(agent_action[1] * 2), 0, 2)),
+                'storage_strategy': [float(np.clip(agent_action[2], 0, 1))]
+            }
+
+    return actions
 
 
 class EnhancedTrainingMonitor:

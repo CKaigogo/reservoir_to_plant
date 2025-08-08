@@ -20,18 +20,21 @@ from typing import Dict, Tuple, List, Any, Optional
 from .reward_system import StabilizedMultiAgentRewardSystem
 
 fixed_connections = np.array([
-    [True, False, False],   # reservoir_0 -> plant_0
-    [False, False, True],   # reservoir_1 -> plant_2
-    [False, False, True],   # reservoir_2 -> plant_2
-    [False, True, False],   # reservoir_3 -> plant_1
-    [False, True, False],   # reservoir_4 -> plant_1
-    [False, True, False],   # reservoir_5 -> plant_1
-    [True, False, False],   # reservoir_6 -> plant_0
-    [True, False, False],   # reservoir_7 -> plant_0
-    [True, False, False],   # reservoir_8 -> plant_0
-    [True, False, False],   # reservoir_9 -> plant_0
-    [True, False, False],   # reservoir_10 -> plant_0
-    [False, True, False],   # reservoir_11 -> plant_1
+    [True, False, False, False, False, False],   # reservoir_0 -> plant_0
+    [False, False, True, False, False, False],   # reservoir_1 -> plant_2
+    [False, False, True, False, False, False],   # reservoir_2 -> plant_2
+    [False, True, False, False, False, False],   # reservoir_3 -> plant_1
+    [False, True, False, False, False, False],   # reservoir_4 -> plant_1
+    [False, True, False, False, False, False],   # reservoir_5 -> plant_1
+    [False, False, False, True, False, False],
+    [False, False, False, False, True, False],
+    [True, False, False, False, False, False],   # reservoir_8 -> plant_0
+    [False, False, False, False, False, True],
+    [True, False, False, False, False, False],   # reservoir_10 -> plant_0
+    [True, False, False, False, False, False],   # reservoir_11 -> plant_0
+    [True, False, False, False, False, False],   # reservoir_12 -> plant_0
+    [True, False, False, False, False, False],   # reservoir_13 -> plant_0
+    [False, True, False, False, False, False],   # reservoir_14 -> plant_1
 ])
 
 
@@ -860,7 +863,7 @@ class WaterManagementEnv(ParallelEnv):
     def _initialize_deterministic_state(self):
         """确定性的状态初始化"""
         # 水库：基于合理的运行水位
-        base_levels = np.array([0.6, 0.55, 0.5, 0.5, 0.6, 0.55, 0.5, 0.6, 0.55, 0.5, 0.6, 0.55])  # 不同水库的标准水位
+        base_levels = np.array([0.6, 0.55, 0.5, 0.5, 0.6, 0.55, 0.5, 0.6, 0.55, 0.5, 0.6, 0.55, 0.5, 0.6, 0.55])  # 不同水库的标准水位
         level_variance = 0.1  # 限制随机性
         noise = self.np_random.uniform(-level_variance, level_variance, self.num_reservoirs)
         safe_levels = np.clip(base_levels + noise, 0.3, 0.8)
@@ -1780,23 +1783,26 @@ class WaterManagementEnv(ParallelEnv):
     def _generate_connections(self):
         """连接矩阵"""
         # 使用固定连接或随机生成
-        if self.use_fixed_connections and self.num_reservoirs == 12 and self.num_plants == 3:
-            # 使用预定义的固定连接（12个水库连接到3个水厂）
-            connections = np.array([
-                [True, False, False],  # reservoir_0 -> plant_0
-                [False, False, True],  # reservoir_1 -> plant_2
-                [False, False, True],  # reservoir_2 -> plant_2
-                [False, True, False],  # reservoir_3 -> plant_1
-                [False, True, False],  # reservoir_4 -> plant_1
-                [False, True, False],  # reservoir_5 -> plant_1
-                [True, False, False],  # reservoir_6 -> plant_0
-                [True, False, False],  # reservoir_7 -> plant_0
-                [True, False, False],  # reservoir_8 -> plant_0
-                [True, False, False],  # reservoir_9 -> plant_0
-                [True, False, False],  # reservoir_10 -> plant_0
-                [False, True, False],  # reservoir_11 -> plant_1
+        if self.use_fixed_connections and self.num_reservoirs == 15 and self.num_plants == 6:
+            # 使用预定义的固定连接（15个水库连接到6个水厂）
+            fixed_connections = np.array([
+                [True, False, False, False, False, False],  # reservoir_0 -> plant_0
+                [False, False, True, False, False, False],  # reservoir_1 -> plant_2
+                [False, False, True, False, False, False],  # reservoir_2 -> plant_2
+                [False, True, False, False, False, False],  # reservoir_3 -> plant_1
+                [False, True, False, False, False, False],  # reservoir_4 -> plant_1
+                [False, True, False, False, False, False],  # reservoir_5 -> plant_1
+                [False, False, False, True, False, False],
+                [False, False, False, False, True, False],
+                [True, False, False, False, False, False],  # reservoir_8 -> plant_0
+                [False, False, False, False, False, True],
+                [True, False, False, False, False, False],  # reservoir_10 -> plant_0
+                [True, False, False, False, False, False],  # reservoir_11 -> plant_0
+                [True, False, False, False, False, False],  # reservoir_12 -> plant_0
+                [True, False, False, False, False, False],  # reservoir_13 -> plant_0
+                [False, True, False, False, False, False],  # reservoir_14 -> plant_1
             ])
-            print(" 使用固定连接矩阵 (12水库->3水厂)")
+            print(" 使用固定连接矩阵 (15水库->6水厂)")
         else:
             # 生成随机连接矩阵
             connections = np.random.choice([True, False],
